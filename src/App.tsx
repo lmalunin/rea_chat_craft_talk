@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+declare global {
+  interface Window {
+    getWebChatCraftTalkExternalControl: any;
+  }
+}
+
 function App() {
-  
-  const widgetChatElName = 'widget-chat'
-  let widget: any = null;
   
   function loadScript(url?: string, content?: string, defer = true) {
     const script = document.createElement('script');
@@ -16,18 +19,16 @@ function App() {
     document.body.appendChild(script);
   }
   
-  function createWidget() {
-    widget = document.querySelector(widgetChatElName);
-    
-    if (!widget) {
-      widget = document.createElement(widgetChatElName);
-      //widget.options = content;
-      document.body.appendChild(widget);
-    }
-  }
-  
   const addChatHandler = () => {
-    loadScript('https://cloud.craft-talk.com/get-bootstrap/webchat_test')
+    loadScript('https://cloud.craft-talk.com/get-bootstrap/webchat_test');
+    window.getWebChatCraftTalkExternalControl = (externalControl: any) => {
+      console.log(externalControl);
+      
+      externalControl.on('webchatOpened', () => {
+        console.log('webchatOpened111')
+      })
+      externalControl.closeWidget();
+    }
   }
   
   const removeChatHandler = () => {
