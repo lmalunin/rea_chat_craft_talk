@@ -25,7 +25,7 @@ function App() {
       console.log(externalControl);
       
       externalControl.on('webchatOpened', () => {
-        console.log('webchatOpened111')
+        console.log('webchatOpened event')
       })
       externalControl.closeWidget();
     }
