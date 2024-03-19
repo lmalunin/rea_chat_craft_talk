@@ -20,7 +20,8 @@ function App() {
     }
     
     const addChatHandler = () => {
-        loadScript('https://chat-marketplace.beta.moex.com/get-bootstrap/channel_377e8bf');
+        loadScript('https://chat-marketplace.beta.moex.com/get-bootstrap/channel_395750d');
+        //loadScript('https://chat-marketplace.beta.moex.com/get-bootstrap/channel_377e8bf');
         window.getWebChatCraftTalkExternalControl = (externalControl: any) => {
             console.log(externalControl);
             
