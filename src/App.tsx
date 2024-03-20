@@ -1,14 +1,45 @@
 import React, { useEffect } from 'react';
-import logo from './logo.svg';
+import { sha256 } from 'js-sha256';
+import base64Js from 'base64-js';
 import './App.css';
 
 declare global {
     interface Window {
         getWebChatCraftTalkExternalControl: any;
+        __WebchatUserCallback: any;
     }
 }
 
 function App() {
+    
+    const sha256hash = (message: string) => {
+        const hashBytes = new Uint8Array(sha256.arrayBuffer(message));
+        const encodedHash = base64Js.fromByteArray(hashBytes).replace(/\+/g, '-').replace(/\//g, '_').replace(/\/=/g, '');
+        
+        return encodedHash;
+    };
+    
+    const getChatHash = () => {
+        return '';
+    }
+    
+    useEffect(() => {
+        window.__WebchatUserCallback = function () {
+            console.log('__WebchatUserCallback')
+            const data = {
+                uuid: '4a623193-53d1-402e-9459-81f7798a5331',
+                first_name: 'Петр',
+                last_name: 'Петров',
+                hash: 'ba380f92a6d69d2fff2743777cb9daf6fba53ed42974fd5a8ebde878980be996'
+            };
+            return data;
+        }
+        
+        
+        return () => {
+            window.__WebchatUserCallback = null;
+        }
+    }, [])
     
     function loadScript(url?: string, content?: string, defer = true) {
         const script = document.createElement('script');
@@ -20,6 +51,18 @@ function App() {
     }
     
     const addChatHandler = () => {
+        
+        // window.__WebchatUserCallback = function () {
+        //     console.log('__WebchatUserCallback')
+        //     const data = {
+        //         uuid: '4a623193-53d1-402e-9459-81f7798a5331',
+        //         first_name: 'Петр',
+        //         last_name: 'Петров',
+        //         hash: 'ba380f92a6d69d2fff2743777cb9daf6fba53ed42974fd5a8ebde878980be996'
+        //     };
+        //     return data;
+        // }
+        
         loadScript('https://chat-marketplace.beta.moex.com/get-bootstrap/channel_395750d');
         //loadScript('https://chat-marketplace.beta.moex.com/get-bootstrap/channel_377e8bf');
         window.getWebChatCraftTalkExternalControl = (externalControl: any) => {
@@ -38,8 +81,10 @@ function App() {
         
         console.log(arr.length)
         
-        for (let i = 0; i < arr.length; i++) {
-            arr[i].remove()
+        if (arr.length > 0) {
+            for (let i = 0; i < arr.length; i++) {
+                arr[i].remove()
+            }
         }
         
     }
